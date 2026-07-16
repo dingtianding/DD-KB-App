@@ -1,0 +1,9 @@
+{
+  "id": "dd-kb-assistant",
+  "name": "DD-KB Assistant",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Ask the local DD-KB retrieval and generation service from an Obsidian sidebar.",
+  "author": "Dean Ding",
+  "isDesktopOnly": true
+}

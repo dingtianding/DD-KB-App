@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DD-KB</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <div class="mark">DD</div>
+      <div><h1>Knowledge desk</h1><p id="status">Loading your vault…</p></div>
+    </header>
+    <section class="hero">
+      <p class="eyebrow">PRIVATE, LOCAL RETRIEVAL</p>
+      <h2>Ask what you already know.</h2>
+      <p>Search career notes, project history, interview stories, and technical references. Every answer points back to the source.</p>
+      <form id="ask-form">
+        <textarea id="question" maxlength="2000" required placeholder="What have I built that demonstrates system-design experience?"></textarea>
+        <div class="form-row"><span>⌘ Enter to ask</span><button type="submit">Search DD-KB <b>→</b></button></div>
+      </form>
+    </section>
+    <section id="result" class="result" hidden>
+      <div class="result-head"><span id="mode">ANSWER</span><span id="timing"></span></div>
+      <div id="answer" class="answer"></div>
+      <h3>Sources</h3>
+      <div id="sources" class="sources"></div>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

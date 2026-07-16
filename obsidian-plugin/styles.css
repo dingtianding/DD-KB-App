@@ -1,0 +1,88 @@
+.dd-kb-assistant {
+  padding: 14px;
+}
+
+.dd-kb-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dd-kb-header h3 {
+  margin: 0 0 12px;
+}
+
+.dd-kb-status,
+.dd-kb-mode {
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+
+.dd-kb-status.is-online::before {
+  color: var(--color-green);
+  content: "● ";
+}
+
+.dd-kb-status.is-offline::before {
+  color: var(--color-red);
+  content: "● ";
+}
+
+.dd-kb-assistant form textarea {
+  display: block;
+  min-height: 110px;
+  resize: vertical;
+  width: 100%;
+}
+
+.dd-kb-assistant form button {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.dd-kb-output {
+  margin-top: 18px;
+}
+
+.dd-kb-answer {
+  margin-top: 8px;
+}
+
+.dd-kb-error {
+  color: var(--text-error);
+}
+
+.dd-kb-sources {
+  display: grid;
+  gap: 6px;
+}
+
+.dd-kb-source {
+  align-items: flex-start;
+  background: var(--background-secondary);
+  display: flex;
+  gap: 8px;
+  height: auto;
+  padding: 8px;
+  text-align: left;
+  white-space: normal;
+  width: 100%;
+}
+
+.dd-kb-source-number {
+  color: var(--interactive-accent);
+  font-size: var(--font-ui-smaller);
+  font-weight: 700;
+}
+
+.dd-kb-source-title {
+  color: var(--text-normal);
+  font-weight: 600;
+}
+
+.dd-kb-source-path {
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  margin-top: 2px;
+}
