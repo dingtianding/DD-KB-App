@@ -4,6 +4,7 @@ const result = document.querySelector('#result');
 const answer = document.querySelector('#answer');
 const sources = document.querySelector('#sources');
 const button = form.querySelector('button');
+const resetView = document.querySelector('#reset-view');
 
 const escapeHtml = value => value.replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 
@@ -50,6 +51,7 @@ fetch('/api/insights').then(r => {
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
+  document.body.classList.add('has-result');
   button.disabled = true;
   button.textContent = 'Searching…';
   const started = performance.now();
@@ -68,6 +70,15 @@ form.addEventListener('submit', async event => {
     result.hidden = false; result.scrollIntoView({behavior:'smooth',block:'start'});
     button.disabled = false; button.innerHTML = 'Search DD-KB <b>→</b>';
   }
+});
+
+resetView.addEventListener('click', () => {
+  document.body.classList.remove('has-result');
+  result.hidden = true;
+  answer.textContent = '';
+  sources.innerHTML = '';
+  question.focus();
+  window.scrollTo({top:0,behavior:'smooth'});
 });
 
 question.addEventListener('keydown', event => {
