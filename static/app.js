@@ -11,6 +11,43 @@ fetch('/api/status').then(r => r.json()).then(data => {
   document.querySelector('#status').textContent = `${data.documents} documents · ${data.chunks} indexed sections`;
 }).catch(() => document.querySelector('#status').textContent = 'Vault status unavailable');
 
+const compactNumber = value => new Intl.NumberFormat('en-US', {notation:'compact',maximumFractionDigits:1}).format(value);
+const askAbout = topic => {
+  question.value = `What does my knowledge base say about ${topic}?`;
+  question.focus();
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+fetch('/api/insights').then(r => {
+  if (!r.ok) throw new Error('Insights unavailable');
+  return r.json();
+}).then(data => {
+  document.querySelector('#stat-notes').textContent = data.documents.toLocaleString();
+  document.querySelector('#stat-sections').textContent = data.chunks.toLocaleString();
+  document.querySelector('#stat-words').textContent = compactNumber(data.words);
+  document.querySelector('#indexed-at').textContent = `INDEXED ${new Date(data.indexed_at).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}`;
+
+  const largest = Math.max(...data.topics.map(topic => topic.notes), 1);
+  document.querySelector('#topics').innerHTML = data.topics.map(topic => `
+    <button class="topic" type="button" data-topic="${escapeHtml(topic.name)}">
+      <span class="topic-row"><strong>${escapeHtml(topic.name)}</strong><em>${topic.notes}</em></span>
+      <span class="bar"><i style="width:${Math.round(topic.notes/largest*100)}%"></i></span>
+    </button>`).join('') || '<p class="empty">No indexed topics yet.</p>';
+  document.querySelectorAll('.topic').forEach(item => item.addEventListener('click', () => askAbout(item.dataset.topic)));
+
+  document.querySelector('#recent').innerHTML = data.recent.map(note => `
+    <div class="recent-note"><strong>${escapeHtml(note.title)}</strong><span>${escapeHtml(note.path)} · ${new Date(note.updated_at).toLocaleDateString([], {month:'short',day:'numeric'})}</span></div>
+  `).join('') || '<p class="empty">No notes yet.</p>';
+
+  document.querySelector('#tags').innerHTML = data.tags.map(tag => `
+    <button type="button" data-tag="${escapeHtml(tag.name)}"><span>#${escapeHtml(tag.name)}</span><em>${tag.notes}</em></button>
+  `).join('') || '<span class="empty">Add frontmatter tags to see topic signals here.</span>';
+  document.querySelectorAll('[data-tag]').forEach(item => item.addEventListener('click', () => askAbout(item.dataset.tag)));
+}).catch(() => {
+  document.querySelector('.insights').classList.add('insights-error');
+  document.querySelector('#topics').innerHTML = '<p class="error">Vault insights are unavailable.</p>';
+});
+
 form.addEventListener('submit', async event => {
   event.preventDefault();
   button.disabled = true;

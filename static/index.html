@@ -21,6 +21,31 @@
         <div class="form-row"><span>⌘ Enter to ask</span><button type="submit">Search DD-KB <b>→</b></button></div>
       </form>
     </section>
+    <section class="insights" aria-labelledby="insights-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">VAULT INSIGHTS</p><h2 id="insights-title">What is in here?</h2></div>
+        <span id="indexed-at"></span>
+      </div>
+      <div class="stat-grid" aria-label="Knowledge base totals">
+        <article><strong id="stat-notes">—</strong><span>notes</span></article>
+        <article><strong id="stat-sections">—</strong><span>indexed sections</span></article>
+        <article><strong id="stat-words">—</strong><span>words</span></article>
+      </div>
+      <div class="insight-grid">
+        <article class="panel topics-panel">
+          <div class="panel-title"><h3>Topics</h3><span>BY NOTE COUNT</span></div>
+          <div id="topics" class="topics"><p class="loading">Reading vault structure…</p></div>
+        </article>
+        <article class="panel">
+          <div class="panel-title"><h3>Recently updated</h3><span>LOCAL FILES</span></div>
+          <div id="recent" class="recent"><p class="loading">Reading timestamps…</p></div>
+        </article>
+      </div>
+      <article class="tag-panel">
+        <div class="panel-title"><h3>Common tags</h3><span>CLICK TO ASK</span></div>
+        <div id="tags" class="tags"><span class="loading">Reading note metadata…</span></div>
+      </article>
+    </section>
     <section id="result" class="result" hidden>
       <div class="result-head"><span id="mode">ANSWER</span><span id="timing"></span></div>
       <div id="answer" class="answer"></div>

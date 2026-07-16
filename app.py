@@ -39,7 +39,8 @@ class Handler(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self) -> None:
-        if urlparse(self.path).path == "/api/status":
+        path = urlparse(self.path).path
+        if path == "/api/status":
             refreshed = INDEX.refresh()
             self._json(200, {
                 "documents": len({c.path for c in INDEX.chunks}),
@@ -47,6 +48,9 @@ class Handler(SimpleHTTPRequestHandler):
                 "indexed_at": INDEX.indexed_at,
                 "refreshed": refreshed,
             })
+            return
+        if path == "/api/insights":
+            self._json(200, INDEX.insights())
             return
         super().do_GET()
 

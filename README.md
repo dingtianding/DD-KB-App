@@ -15,6 +15,7 @@ network.
 - Heading-aware chunks with source paths and line numbers.
 - Optional grounded answer generation through the OpenAI Responses API.
 - Browser interface and an Obsidian right-sidebar plugin.
+- Local dashboard with note, section, word, topic, tag, and recent-update insights.
 - Excludes hidden folders, `Inbox`, `Templates`, application code, and tests.
 
 ## Run

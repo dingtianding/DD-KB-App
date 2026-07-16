@@ -73,6 +73,25 @@ class RetrievalTests(unittest.TestCase):
             self.assertEqual(index.search("hummingbird"), [])
             self.assertEqual(index.search("kestrel")[0]["path"], "public.md")
 
+    def test_insights_summarize_topics_tags_and_recent_notes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "10-Career").mkdir()
+            (root / "30-Knowledge").mkdir()
+            (root / "10-Career" / "resume.md").write_text(
+                "---\ntags: [career, resume]\n---\n# Resume\n\nPython systems work."
+            )
+            (root / "30-Knowledge" / "reliability.md").write_text(
+                "---\ntags: [backend, reliability]\n---\n# Reliability\n\nRetries need idempotency."
+            )
+            index = SearchIndex(root)
+            insights = index.insights()
+            self.assertEqual(insights["documents"], 2)
+            self.assertEqual({topic["name"] for topic in insights["topics"]}, {"Career", "Knowledge"})
+            self.assertIn({"name": "career", "notes": 1}, insights["tags"])
+            self.assertEqual(len(insights["recent"]), 2)
+            self.assertGreater(insights["words"], 0)
+
 
 class GenerationTests(unittest.TestCase):
     def test_collects_text_across_response_items(self):

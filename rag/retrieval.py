@@ -10,9 +10,17 @@ from pathlib import Path
 
 
 WORD_RE = re.compile(r"[a-zA-Z0-9][a-zA-Z0-9_'-]*")
+TAG_RE = re.compile(r"^tags:\s*\[([^]]*)\]", re.MULTILINE)
 SKIP_DIRS = {
     ".git", ".obsidian", ".rag", "__pycache__", "rag", "static", "tests",
     "Templates", "Inbox",
+}
+TOPIC_LABELS = {
+    "00-Voice": "Voice",
+    "10-Career": "Career",
+    "20-DCB": "DCB",
+    "30-Knowledge": "Knowledge",
+    "40-Personal": "Personal",
 }
 
 
@@ -161,3 +169,49 @@ class SearchIndex:
                 "line": chunk.line, "text": chunk.text, "score": round(score, 4),
             })
         return results
+
+    def insights(self, recent_limit: int = 6) -> dict:
+        """Return local, non-generative metadata for the vault dashboard."""
+        self.refresh()
+        paths = self._paths()
+        topics: Counter = Counter()
+        tags: Counter = Counter()
+        notes = []
+        total_words = 0
+
+        for path in paths:
+            try:
+                text = path.read_text(encoding="utf-8")
+                stat = path.stat()
+            except FileNotFoundError:
+                continue
+            relative = path.relative_to(self.root)
+            top_level = relative.parts[0] if len(relative.parts) > 1 else "Root"
+            topics[TOPIC_LABELS.get(top_level, top_level.replace("-", " "))] += 1
+            total_words += len(_terms(text))
+            tag_match = TAG_RE.search(text[:2_000])
+            if tag_match:
+                for tag in tag_match.group(1).split(","):
+                    normalized = tag.strip().strip("'\"")
+                    if normalized:
+                        tags[normalized] += 1
+            notes.append({
+                "path": str(relative),
+                "title": _title(text, path.stem.replace("-", " ")),
+                "updated_at": datetime.fromtimestamp(stat.st_mtime, timezone.utc).isoformat(),
+            })
+
+        topic_items = [
+            {"name": name, "notes": count}
+            for name, count in sorted(topics.items(), key=lambda item: (-item[1], item[0]))
+        ]
+        recent = sorted(notes, key=lambda note: note["updated_at"], reverse=True)[: max(1, min(recent_limit, 12))]
+        return {
+            "documents": len(paths),
+            "chunks": len(self.chunks),
+            "words": total_words,
+            "topics": topic_items,
+            "tags": [{"name": name, "notes": count} for name, count in tags.most_common(12)],
+            "recent": recent,
+            "indexed_at": self.indexed_at,
+        }
