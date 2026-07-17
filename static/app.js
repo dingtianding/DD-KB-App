@@ -82,5 +82,8 @@ resetView.addEventListener('click', () => {
 });
 
 question.addEventListener('keydown', event => {
-  if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') form.requestSubmit();
+  if (event.key === 'Enter' && !event.isComposing) {
+    event.preventDefault();
+    if (!button.disabled) form.requestSubmit();
+  }
 });
